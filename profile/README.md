@@ -2,7 +2,7 @@
 
 **Secure Post-Quantum-Safe Core Banking, ISO 20022 Payments & Open Banking Platform.**
 
-Bank8 is the finance vertical of the Sentin8 platform — a complete retail banking stack: core ledger, payment orchestration (domestic + cross-border), multi-country open banking (FDX v6.x for US/Canada, OBL Read/Write API for the UK), prudential risk measurement, and AML/CTF compliance. All built as six independent Rust services composed on top of the Sentin8 platform for identity, events, workflows, scheduling, and storage.
+Bank8 is the finance vertical of the Sentin8 platform — a complete retail banking stack: core ledger, payment orchestration (domestic + cross-border), open banking composed from the OpenFin8 vertical, prudential risk measurement, and AML/CTF compliance. All built as six independent Rust services composed on top of the Sentin8 platform for identity, events, workflows, scheduling, and storage.
 
 ## Services
 
@@ -10,10 +10,7 @@ Bank8 is the finance vertical of the Sentin8 platform — a complete retail bank
 |---|---|---|---|---|
 | **Bank8:Ledger** | Core Banking | Double-entry ledger with 13 configurable product types, accounts, products, postings, balances (3-D), statements, checksum-chained audit trail | 44 domain tables + outbox + audit journal | 91 endpoints |
 | **Bank8:Payments** | Payment Orchestration | ISO 20022 scheme flows (B8 on-us, SEPA, TIPS, SWIFT AGI), card issuing/lifecycle/3DS, mandates, payees, routing rules, recurring payments, sandbox simulators | 55 domain tables + outbox + audit journal | 90 endpoints |
-| **Bank8:OpenCore** | Open Banking kernel | The jurisdiction-agnostic open-banking library shared by every country adapter: consent ledger + lifecycle, recipient registry (two-ledger model), CSDF data minimization, HMAC-signed notifications, certification metrics | 15 domain tables (schema-parameterized) | Library — embedded by the adapters |
-| **Bank8:OpenCA** | Open Banking (Canada) | The Canadian consumer-driven-banking adapter over the FDX v6.x wire — provider + recipient surfaces, consent-checked data sharing, version-configurable (`BANK8_OPEN_CA_VERSION`) | Schema `open_ca` via the kernel tables | 71 routes |
-| **Bank8:OpenUS** | Open Banking (US) | The US FDX adapter over the same kernel — identical surface, US identity (`BANK8_OPEN_US_VERSION`) | Schema `open_us` via the kernel tables | 71 routes |
-| **Bank8:OpenUK** | Open Banking (UK) | The OBL Read/Write API ASPSP adapter (planned): FAPI 1 Advanced ceremony, intent-based consents, `{Data, Links, Meta}` envelopes, JWS signing, OB Directory trust | Schema `open_uk` via the kernel tables | In design (OBARCH-5) |
+| **OpenFin8** (composed vertical) | Open Finance | The open-finance vertical ([OpenFin8 org](https://github.com/OpenFin8)): consent ledger, recipient registry, CSDF minimization, per-jurisdiction adapters (CA/US serving FDX v6.x; UK designed). bank8 composes the provider role by enabling `openfin8:ca` in its environment; OpenFin8 consumes Ledger/Payments via public APIs + the `bank8::` SDK contracts only (the OBVERT invariant) | Owned by the OpenFin8 vertical | see the [OpenFin8](https://github.com/OpenFin8) org |
 | **Bank8:Risk** | Prudential Risk | Exposure measurement from posting/payment events, Basel capital, LCR/NSFR liquidity, IFRS 9 ECL staging, limit monitoring with breach events, stress scenarios | Event-driven (consumes ledger/payments events) | Embedded worker |
 | **Bank8:Reporting** | Regulatory Reporting | Jurisdiction registry, filing calendar, return generation (XBRL/CSV), submission/amendment lifecycle, AML/CTF filing executor (STR/SAR/CTR/EFTR/LCTR) | Event-driven (consumes risk/compliance events) | Embedded worker |
 | **Bank8:Compliance** | AML/CTF | KYC/CDD, beneficial ownership, PEP/sanctions screening, transaction monitoring, alert/case lifecycle — detection only, filing via Reporting | Event-driven (consumes ledger/payments events) | Embedded worker |
@@ -34,7 +31,7 @@ Bank8 is the finance vertical of the Sentin8 platform — a complete retail bank
 | `sdk/rust/bank8` | Unified Rust SDK facade — typed clients + contracts (`bank8::ledger`, `bank8::payments`, etc.) |
 | `crates/ledger/contracts` | Wire DTOs for ledger domain |
 | `crates/payments/contracts` | Wire DTOs for payments domain |
-| `crates/open/core` (bank8-open-core) | The open-banking kernel library — traits + shared implementation |
+| `openfin8-core` ([OpenFin8](https://github.com/OpenFin8/openfin8-core)) | The open-finance kernel library — traits + shared implementation (the OpenFin8 vertical) |
 | `crates/fdx/contracts` | Wire DTOs for the FDX (open-banking) domain |
 | `crates/regulatory/contracts` | Wire DTOs for regulatory reporting domain |
 
