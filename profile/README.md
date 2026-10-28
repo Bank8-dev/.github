@@ -20,9 +20,12 @@ Bank8 is the finance vertical of the Sentin8 platform — a complete retail bank
 | Repository | Description |
 |---|---|
 | `bank8-ebank` | Retail customer banking app |
-| `bank8-efintech` | Fintech recipient app (open-banking consumer) |
 | `bank8-eteller` | Branch teller terminal |
 | `bank8-admin` | Vertical admin console (RFW) |
+
+The recipient app moved with the open-finance vertical: the former
+`bank8-efintech` is now **eOpenCA**
+([`OpenFin8/openfin8-eopenca`](https://github.com/OpenFin8/openfin8-eopenca)).
 
 ## SDKs & Libraries
 
