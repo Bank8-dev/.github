@@ -1,6 +1,6 @@
 # Bank8 - Finance Vertical
 
-**Secure Post-Quantum-Safe Core Banking, ISO 20022 Payments & Open Banking Platform.**
+**Secure Post-Quantum-Safe Core Banking, ISO 20022 Payments Platform That Heals and Scales Itself.**
 
 Bank8 is the finance vertical of the Sentin8 platform — a complete retail banking stack: core ledger, payment orchestration (domestic + cross-border), open banking composed from the OpenFin8 vertical, prudential risk measurement, and AML/CTF compliance. All built as six independent Rust services composed on top of the Sentin8 platform for identity, events, workflows, scheduling, and storage.
 
