@@ -2,7 +2,7 @@
 
 **Secure Post-Quantum-Safe Core Banking, ISO 20022 Payments Platform That Heals and Scales Itself.**
 
-Bank8 is the finance vertical of the Sentin8 platform — a complete retail banking stack: core ledger, payment orchestration (domestic + cross-border), open banking composed from the OpenFin8 vertical, prudential risk measurement, and AML/CTF compliance. All built as six independent Rust services composed on top of the Sentin8 platform for identity, events, workflows, scheduling, and storage.
+Bank8 is the finance vertical of the Sentin8 platform - a complete retail banking stack: core ledger, payment orchestration (domestic + cross-border), open banking composed from the OpenFin8 vertical, prudential risk measurement, and AML/CTF compliance. All built as six independent Rust services composed on top of the Sentin8 platform for identity, events, workflows, scheduling, and storage.
 
 ## Services
 
@@ -13,7 +13,7 @@ Bank8 is the finance vertical of the Sentin8 platform — a complete retail bank
 | **OpenFin8** (composed vertical) | Open Finance | The open-finance vertical ([OpenFin8](https://openfin8.dev/) - org: [OpenFin8](https://github.com/OpenFin8)): consent ledger, recipient registry, CSDF minimization, per-jurisdiction adapters (CA/US serving FDX v6.x; UK designed). bank8 composes the provider role by enabling `openfin8:ca` in its environment; OpenFin8 consumes Ledger/Payments via public APIs + the `bank8::` SDK contracts only (the OBVERT invariant) | Owned by the OpenFin8 vertical | see the [OpenFin8](https://github.com/OpenFin8) org |
 | **Bank8:Risk** | Prudential Risk | Exposure measurement from posting/payment events, Basel capital, LCR/NSFR liquidity, IFRS 9 ECL staging, limit monitoring with breach events, stress scenarios | Event-driven (consumes ledger/payments events) | Embedded worker |
 | **Bank8:Reporting** | Regulatory Reporting | Jurisdiction registry, filing calendar, return generation (XBRL/CSV), submission/amendment lifecycle, AML/CTF filing executor (STR/SAR/CTR/EFTR/LCTR) | Event-driven (consumes risk/compliance events) | Embedded worker |
-| **Bank8:Compliance** | AML/CTF | KYC/CDD, beneficial ownership, PEP/sanctions screening, transaction monitoring, alert/case lifecycle — detection only, filing via Reporting | Event-driven (consumes ledger/payments events) | Embedded worker |
+| **Bank8:Compliance** | AML/CTF | KYC/CDD, beneficial ownership, PEP/sanctions screening, transaction monitoring, alert/case lifecycle - detection only, filing via Reporting | Event-driven (consumes ledger/payments events) | Embedded worker |
 
 ## Flutter Apps
 
@@ -31,10 +31,10 @@ The recipient app moved with the open-finance vertical: the former
 
 | Path | Purpose |
 |---|---|
-| `sdk/rust/bank8` | Unified Rust SDK facade — typed clients + contracts (`bank8::ledger`, `bank8::payments`, etc.) |
+| `sdk/rust/bank8` | Unified Rust SDK facade - typed clients + contracts (`bank8::ledger`, `bank8::payments`, etc.) |
 | `crates/ledger/contracts` | Wire DTOs for ledger domain |
 | `crates/payments/contracts` | Wire DTOs for payments domain |
-| `openfin8-core` ([OpenFin8](https://github.com/OpenFin8/openfin8-core)) | The open-finance kernel library — traits + shared implementation (the OpenFin8 vertical) |
+| `openfin8-core` ([OpenFin8](https://github.com/OpenFin8/openfin8-core)) | The open-finance kernel library - traits + shared implementation (the OpenFin8 vertical) |
 | `crates/fdx/contracts` | Wire DTOs for the FDX (open-banking) domain |
 | `crates/regulatory/contracts` | Wire DTOs for regulatory reporting domain |
 
@@ -56,11 +56,11 @@ Bank8 depends on these Sentin8 platform services for cross-cutting concerns:
 
 ## Key Invariants
 
-- **Double-entry atomicity** — posting batches that don't balance per denomination are rejected before any row is written
-- **One money-movement executor** — all financial movement realizes through Bank8:Ledger via the public API; no service writes another's balances
-- **Idempotent by construction** — every payment/posting is idempotent; retries can never double-post
-- **Terminal states are final** — completed/cancelled/revoked states never regress
-- **No consent, no data** — external data access exists only under explicit, revocable customer consent with field-level minimization
+- **Double-entry atomicity** - posting batches that don't balance per denomination are rejected before any row is written
+- **One money-movement executor** - all financial movement realizes through Bank8:Ledger via the public API; no service writes another's balances
+- **Idempotent by construction** - every payment/posting is idempotent; retries can never double-post
+- **Terminal states are final** - completed/cancelled/revoked states never regress
+- **No consent, no data** - external data access exists only under explicit, revocable customer consent with field-level minimization
 
 ---
 
