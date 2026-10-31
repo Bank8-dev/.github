@@ -1,8 +1,10 @@
 # Bank8 - Finance Vertical
 
-**Secure Post-Quantum-Safe Core Banking, ISO 20022 Payments Platform That Heals and Scales Itself.**
+**Secure Post-Quantum-Safe Core Banking & ISO 20022 Payments That Heals and Scales Itself - with Products Extended as Code via WASM Edge Functions.**
 
 Bank8 is the finance vertical of the Sentin8 platform - a complete retail banking stack: core ledger, payment orchestration (domestic + cross-border), open banking composed from the OpenFin8 vertical, prudential risk measurement, and AML/CTF compliance. All built as six independent Rust services composed on top of the Sentin8 platform for identity, events, workflows, scheduling, and storage.
+
+**Extensibility is architectural:** custom product logic (fees, tiered interest, velocity limits, sweeps) compiles to WASM and runs in **Sentin8:Func**, the platform's isolated edge-function service - invoked around the ledger's atomic commit through typed hooks, never inside the transaction loop. Products launch and change as data operations (upload → validate → simulate → activate) with **zero core restarts**; a buggy hook is contained in its sandbox while the posting transaction stays intact.
 
 ## Services
 
@@ -49,7 +51,7 @@ Bank8 depends on these Sentin8 platform services for cross-cutting concerns:
 | **Sentin8:Bus** | Durable event transport, producer outbox relay, consumer DLQ, SSE push | bank8 → Bus (produce + consume domain events) |
 | **Sentin8:Flow** | Multi-step workflow orchestration with retries and wait states | bank8 → Flow (payment instruction workflows) |
 | **Sentin8:Cron** | Recurring job scheduling (statement runs, schedule-driven postings) | bank8 → Cron (schedule registration) |
-| **Sentin8:Func** | Tenant-authored WASM function execution | bank8 ← Func (proxy-back handlers for hooks) |
+| **Sentin8:Func** | Tenant-authored WASM edge functions (hooks execute outside the core; modules call back through the certificate-bound proxy-back endpoint) | bank8 ← Func (proxy-back handlers for hooks; per-product-version module registry) |
 | **Sentin8:Storage** | Object/file storage (statement documents, filing packages) | bank8 → Storage (document PUT/GET) |
 | **Sentin8:Stat** | Business metrics aggregation and telemetry | bank8 → Stat (event ingestion) |
 | **Sentin8:Sys** | Organization/environment lifecycle, service enablement | bank8 → Sys (env-init events) |
@@ -61,6 +63,7 @@ Bank8 depends on these Sentin8 platform services for cross-cutting concerns:
 - **Idempotent by construction** - every payment/posting is idempotent; retries can never double-post
 - **Terminal states are final** - completed/cancelled/revoked states never regress
 - **No consent, no data** - external data access exists only under explicit, revocable customer consent with field-level minimization
+- **Extension code never touches the commit** - product logic runs as sandboxed WASM (fuel + memory + deadline, WASI rejected) on the platform side; even a hook-initiated posting re-enters the same validation pipeline
 
 ---
 
