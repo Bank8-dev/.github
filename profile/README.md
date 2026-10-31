@@ -6,6 +6,17 @@ Bank8 is the finance vertical of the Sentin8 platform - a complete retail bankin
 
 **Extensibility is architectural:** custom product logic (fees, tiered interest, velocity limits, sweeps) compiles to WASM and runs in **Sentin8:Func**, the platform's isolated edge-function service - invoked around the ledger's atomic commit through typed hooks, never inside the transaction loop. Products launch and change as data operations (upload → validate → simulate → activate) with **zero core restarts**; a buggy hook is contained in its sandbox while the posting transaction stays intact.
 
+> **A note on our history.** If you found your way here looking for
+> **PRIME** - `authPrime`, `exchangePRIME`, and family - you're in the
+> right place. Those projects are this one: our open-source
+> work is now rebranded to **Sentin8** (this vertical is **Bank8**) to
+> avoid confusion with other brand names and products. At the same
+> time we left our self-hosted **Apache SVN** behind and moved
+> everything to GitHub. The lineage goes back further than you might
+> expect - here's a fun LinkedIn read from 2017, when the platform was
+> still called PRIME and still lived on SVN:
+> [Advanced Hybrid Securities Exchange](https://www.linkedin.com/pulse/advanced-hybrid-securities-exchange-hamid-jahanzad/).
+
 ## Services
 
 | Service | Domain | What it does | Tables | Endpoints |
