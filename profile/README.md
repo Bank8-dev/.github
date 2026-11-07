@@ -45,10 +45,36 @@ match your operational needs.
 |---|---|---|---|---|
 | **Bank8:Ledger** | Core Banking | Double-entry ledger with 13 configurable product types, accounts, products, postings, balances (3-D), statements, checksum-chained audit trail | 44 domain tables + outbox + audit journal | 91 endpoints |
 | **Bank8:Payments** | Payment Orchestration | ISO 20022 scheme flows (B8 on-us, SEPA, TIPS, SWIFT AGI), card issuing/lifecycle/3DS, mandates, payees, routing rules, recurring payments, sandbox simulators | 55 domain tables + outbox + audit journal | 90 endpoints |
-| **OpenFin8** (composed vertical) | Open Finance | The open-finance vertical ([OpenFin8](https://openfin8.dev/) - org: [OpenFin8](https://github.com/OpenFin8)): consent ledger, recipient registry, CSDF minimization, per-jurisdiction adapters (CA/US serving FDX v6.x; UK designed). bank8 composes the provider role by enabling `openfin8:ca` in its environment; OpenFin8 consumes Ledger/Payments via public APIs + the `bank8::` SDK contracts only (the OBVERT invariant) | Owned by the OpenFin8 vertical | see the [OpenFin8](https://github.com/OpenFin8) org |
 | **Bank8:Risk** | Prudential Risk | Exposure measurement from posting/payment events, Basel capital, LCR/NSFR liquidity, IFRS 9 ECL staging, limit monitoring with breach events, stress scenarios | Event-driven (consumes ledger/payments events) | Embedded worker |
 | **Bank8:Reporting** | Regulatory Reporting | Jurisdiction registry, filing calendar, return generation (XBRL/CSV), submission/amendment lifecycle, AML/CTF filing executor (STR/SAR/CTR/EFTR/LCTR) | Event-driven (consumes risk/compliance events) | Embedded worker |
 | **Bank8:Compliance** | AML/CTF | KYC/CDD, beneficial ownership, PEP/sanctions screening, transaction monitoring, alert/case lifecycle - detection only, filing via Reporting | Event-driven (consumes ledger/payments events) | Embedded worker |
+
+## Open Banking / Open Finance
+
+Verticals owned outside this repository that bank8 composes into its
+stack. They keep their own tables, endpoints, and lifecycle; bank8 only
+composes them by enabling them in its environment.
+
+| Vertical | Domain | What it does | Service Types |
+|---|---|---|---|
+| **OpenFin8** | Open Finance | Consent-first financial data sharing ([openfin8.dev](https://openfin8.dev/) - org: [OpenFin8](https://github.com/OpenFin8)): the consent authority, recipient registry (two-ledger model), CSDF field-level minimization, HMAC-signed notifications, and per-jurisdiction adapters, all over a shared `openfin8-core` kernel library | One service per market (below); enable individually per environment |
+
+**OpenFin8 markets** - a bank activates a market by enabling one service in an environment, not by porting software:
+
+| Service | Jurisdiction | Standard | Status |
+|---|---|---|---|
+| `openfin8:ca` | Canada | FDX v6.x (consumer-driven banking) | serving |
+| `openfin8:us` | United States | FDX v6.x | serving |
+| `openfin8:uk` | United Kingdom | OBL Read/Write API v3.1.x | serving (FAPI ceremony, intent consents) |
+| `openfin8:eu` | European Union | Berlin Group openFinance | serving (SCA ceremonies, eIDAS) |
+| `openfin8:br` | Brazil | Open Finance Brasil | designed |
+| `openfin8:au` | Australia | CDR | designed |
+
+**Composition.** bank8 composes the **provider role** by enabling `openfin8:ca` in its
+environment (`sys.services`); OpenFin8 consumes Ledger/Payments via public APIs + the
+`bank8::` SDK contracts only - never the bank8 database (the OBVERT invariant). Tables
+and endpoints are owned by the OpenFin8 vertical; recipient-only fintechs compose it
+standalone.
 
 ## Flutter Apps
 
